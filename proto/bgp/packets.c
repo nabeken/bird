@@ -809,9 +809,11 @@ bgp_get_nexthop(struct bgp_proto *bgp, rta *a)
   struct eattr *nh = ea_find(a->eattrs, EA_CODE(EAP_BGP, BA_NEXT_HOP));
   ASSERT(nh);
   nexthop = *(ip_addr *) nh->u.ptr->data;
-  neigh = neigh_find(&bgp->p, &nexthop, 0);
-  if (neigh)
+
+  if (bgp->neigh)
     {
+      neigh = bgp->neigh;
+
       if (neigh->scope == SCOPE_HOST)
 	{
 	  DBG("BGP: Loop!\n");
@@ -819,7 +821,10 @@ bgp_get_nexthop(struct bgp_proto *bgp, rta *a)
 	}
     }
   else
-    neigh = bgp->neigh;
+    {
+      neigh = neigh_find(&bgp->p, &nexthop, 0);
+    }
+
   a->gw = neigh->addr;
   a->iface = neigh->iface;
   return 1;

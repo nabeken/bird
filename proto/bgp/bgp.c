@@ -557,6 +557,8 @@ bgp_connect(struct bgp_proto *p)	/* Enter Connect state and start establishing c
   bgp_setup_conn(p, conn);
   bgp_setup_sk(conn, s);
   bgp_conn_set_state(conn, BS_CONNECT);
+  s->iface = p->neigh->iface;
+
   if (sk_open(s))
     {
       bgp_sock_err(s, 0);
@@ -750,7 +752,12 @@ bgp_start_locked(struct object_lock *lock)
     }
   
   if (p->neigh->iface)
-    bgp_start_neighbor(p);
+    {
+      if (cf->ifname)
+        p->neigh->iface = if_find_by_name(cf->ifname);
+
+      bgp_start_neighbor(p);
+    }
   else
     BGP_TRACE(D_EVENTS, "Waiting for %I to become my neighbor", p->next_hop);
 }

@@ -1270,6 +1270,7 @@ bgp_decode_attrs(struct bgp_conn *conn, byte *attr, unsigned int len, struct lin
   a->aflags = 0;
   a->from = bgp->cf->remote_ip;
   a->eattrs = NULL;
+  a->iface  = bgp->neigh->iface;
 
   /* Parse the attributes */
   bzero(seen, sizeof(seen));

@@ -47,6 +47,7 @@ struct bgp_config {
   unsigned error_delay_time_max;
   unsigned disable_after_error;		/* Disable the protocol when error is detected */
   char *password;			/* Password used for MD5 authentication */
+  char *ifname;
 };
 
 #define MLL_SELF 1

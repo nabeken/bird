@@ -16,7 +16,7 @@ CF_DEFINES
 
 CF_DECLS
 
-CF_KEYWORDS(BGP, LOCAL, NEIGHBOR, AS, HOLD, TIME, CONNECT, RETRY, KEEPALIVE,
+CF_KEYWORDS(BGP, LOCAL, NEIGHBOR, AS, INTERFACE, HOLD, TIME, CONNECT, RETRY, KEEPALIVE,
 	MULTIHOP, STARTUP, VIA, NEXT, HOP, SELF, DEFAULT, PATH, METRIC,
 	ERROR, START, DELAY, FORGET, WAIT, ENABLE, DISABLE, AFTER,
 	BGP_PATH, BGP_LOCAL_PREF, BGP_MED, BGP_ORIGIN, BGP_NEXT_HOP,
@@ -53,11 +53,12 @@ bgp_proto:
    bgp_proto_start proto_name '{'
  | bgp_proto proto_item ';'
  | bgp_proto LOCAL AS expr ';' { BGP_CFG->local_as = $4; }
- | bgp_proto NEIGHBOR ipa AS expr ';' {
+ | bgp_proto NEIGHBOR ipa AS expr INTERFACE TEXT ';' {
      if (ipa_nonzero(BGP_CFG->remote_ip)) cf_error("Only one neighbor per BGP instance is allowed");
 
      BGP_CFG->remote_ip = $3;
      BGP_CFG->remote_as = $5;
+     BGP_CFG->ifname    = $7;
    }
  | bgp_proto RR CLUSTER ID idval ';' { BGP_CFG->rr_cluster_id = $5; }
  | bgp_proto RR CLIENT ';' { BGP_CFG->rr_client = 1; }

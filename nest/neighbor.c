@@ -124,7 +124,9 @@ neigh_find2(struct proto *p, ip_addr *a, struct iface *ifa, unsigned flags)
   if (class < 0)			/* Invalid address */
     return NULL;
   if (((class & IADDR_SCOPE_MASK) == SCOPE_HOST) ||
+#ifndef IPV6
       (((class & IADDR_SCOPE_MASK) == SCOPE_LINK) && (ifa == NULL)) ||
+#endif
       !(class & IADDR_HOST))
     return NULL;			/* Bad scope or a somecast */
 
